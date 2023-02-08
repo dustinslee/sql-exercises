@@ -49,17 +49,16 @@ GROUP BY s.productID;
 SELECT p.Name AS 'Product Name', r.Reviewer, r.Rating, r.Comment
 FROM products AS p
 INNER JOIN reviews AS r ON p.ProductID = r.ProductID
-WHERE p.NAME LIKE '%Visio%'
-ORDER BY r.Rating ASC
-LIMIT 1;
- 
+WHERE p.Name LIKE '%Visio%' AND r.Rating = 1;
+
 -- ------------------------------------------ Extra - May be difficult
 
 /* Your goal is to write a query that serves as an employee sales report.
 This query should return the employeeID, the employee's first and last name, the name of each product, how many of that product they sold */
-SELECT s.EmployeeID, e.FirstName, e.LastName, MAX(p.Name) AS 'Product Name', SUM(s.Quantity) AS 'Total_Sold'
-FROM sales AS s
-INNER JOIN employees AS e ON s.EmployeeID = e.EmployeeID
-INNER JOIN products AS p ON s.ProductID = p.ProductID
+SELECT e.EmployeeID, CONCAT(e.FirstName, ' ',e.LastName) AS 'Employee Name', p.Name AS 'Product Name', 
+	   MAX(s.Quantity) AS 'Quantity', SUM(s.Quantity * s.PricePerUnit) AS 'Total_Sold'
+FROM employees AS e
+INNER JOIN sales AS s ON e.EmployeeID = s.EmployeeID
+INNER JOIN products AS p ON p.ProductID = s.ProductID
 GROUP BY e.EmployeeID, p.ProductID
 ORDER BY Total_Sold DESC;
